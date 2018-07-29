@@ -9,10 +9,18 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
+####To run automated tests
+
 - python docopt library - https://github.com/docopt/docopt
 
 ```
 pip install docopt
+```
+
+- python coverage library
+
+```
+pip install coverage
 ```
 
 ### Installing
