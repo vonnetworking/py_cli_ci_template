@@ -23,6 +23,12 @@ pip install docopt
 pip install coverage
 ```
 
+- python pycodestyle library
+
+```
+pip install pycodestyle
+```
+
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running
