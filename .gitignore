@@ -1,5 +1,7 @@
 # don't commit coverage logs as part of SCM - stored via CI
 coverage
+coverage.xml
+python_tests_xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

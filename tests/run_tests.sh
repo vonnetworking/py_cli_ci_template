@@ -14,3 +14,5 @@ python -m coverage html -d coverage
 
 pycodestyle --max-line-length=120 calc.py > pep8.log || true
 pylint calc > pylint.log || true
+
+python tests/unittest_runner.py
