@@ -5,12 +5,12 @@
 
 . ./virtualenv/bin/activate
 
-rm -f pep8.log pyflakes.log
+rm -f pep8.log pylint.log
 
-PYTHONPATH="." python -m coverage run ..
+PYTHONPATH="." python -m coverage run calc.py
 
 python -m coverage xml -o coverage.xml
 python -m coverage html -d coverage
 
-pep8 --max-line-length=120 ../calc > pep8.log || true
-pylint calc > pyflakes.log || true
+pycodestyle --max-line-length=120 calc.py > pep8.log || true
+pylint calc > pylint.log || true
