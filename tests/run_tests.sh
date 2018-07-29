@@ -9,8 +9,6 @@ rm -f pep8.log pyflakes.log
 
 PYTHONPATH="." python -m coverage run ..
 
-done
-
 python -m coverage xml -o coverage.xml
 python -m coverage html -d coverage
 
