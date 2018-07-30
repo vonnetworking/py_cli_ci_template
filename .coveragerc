@@ -1,0 +1,3 @@
+[run]
+#exclude your actual tests from code coverage reporting
+omit = *tests*

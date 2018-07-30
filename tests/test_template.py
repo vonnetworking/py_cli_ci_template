@@ -52,6 +52,11 @@ class TestCalc(unittest.TestCase):
         self.assertEqual(calc.subtract(10, 5), 5)
         self.assertEqual(calc.subtract(1, 1), 0)
         self.assertEqual(calc.subtract(11, -1), 12)
+    
+    def test_multiply(self):
+        self.assertEqual(calc.multiply(10, 5), 50)
+        self.assertEqual(calc.multiply(1, 1), 1)
+        self.assertEqual(calc.multiply(11, -10), -110)
 
 #to use, import the module(s) from you
 if __name__ == '__main__':
