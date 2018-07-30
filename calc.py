@@ -1,23 +1,23 @@
 """module creates a basic set of calculator functions to
     add, subtract, multiply, or divide 2 numbers"""
 
-def add(x, y):
+def add(nmbr1, nmbr2):
     """Add Function"""
-    return x + y
+    return nmbr1 + nmbr2
 
 
-def subtract(x, y):
+def subtract(nmbr1, nmbr2):
     """Subtract Function"""
-    return x - y
+    return nmbr1 - nmbr2
 
 
-def multiply(x, y):
-    """Multiply Function"""
-    return x * y
+def multiply(nmbr1, nmbr2):
+    """Multiplnmbr2 Function"""
+    return nmbr1 * nmbr2
 
 
-def divide(x, y):
+def divide(nmbr1, nmbr2):
     """Divide Function"""
-    if y == 0:
-        raise ValueError('Can not divide by zero!')
-    return x / y
+    if nmbr2 == 0:
+        raise ValueError('Can not divide bnmbr2 zero!')
+    return nmbr1 / nmbr2

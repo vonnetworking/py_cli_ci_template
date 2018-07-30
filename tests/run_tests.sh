@@ -6,7 +6,6 @@
 #TODO - these should probably be able to be specified as parameters on the jenkins job
 
 MINIMUM_LINT_SCORE=7 #lowest lint score that will result in a successful build
-
 LOG_DIR="tests/logs"
 
 ########################################################################################################################
@@ -30,12 +29,13 @@ CODE_FILES=`find . -not \( -path ./virtualenv -prune \) -not \( -path ./tests -p
 
 for FILE in ${CODE_FILES}; do
 	
-	PYTHONPATH="." python -m coverage run ${FILE}
-	CODE_FILE=`echo ${FILE} | sed 's/\//_/g'` #file naming for logs...replaces the slashes 
-	pycodestyle --max-line-length=120 ${FILE} > ${LOG_DIR}/${CODE_FILE}.pep8.log || true
-        pylint ${FILE} > ${LOG_DIR}/${CODE_FILE}.pylint.log || true
+	CLEAN_FILENAME=`echo ${FILE} | sed 's/.\///g' | sed 's/\///g'` #file naming for logs...replaces the slashes 
+	pycodestyle --max-line-length=120 ${FILE} > ${LOG_DIR}/${CLEAN_FILENAME}.pep8.log || true
+        pylint ${FILE} > ${LOG_DIR}/${CLEAN_FILENAME}.pylint.log || true
 done
 
+########################################################################################################################
+# LINT TESTING
 ########################################################################################################################
 
 #now check the pylint reports and if anything scores under a 7 out of 10, fail the build
@@ -46,13 +46,15 @@ LINT_REPORTS=`find ${LOG_DIR} -name "*pylint.log"`
 LINT_FAILS=() #array to capture any lint style failures
 
 for FILE in ${LINT_REPORTS}; do
+	echo "${FILE}"
+
 	grep "Your code has been rated at" ${FILE}
 	if [ "$?" -eq "0" ]; then
 		SCORE=`grep "Your code has been rated at" ${FILE} | awk -F'rated at' '{print $2}' | awk -F'.' '{print $1}'`
 		SCORE_INT=$((${SCORE} + 0))
 	
 		if [ "${SCORE_INT}" -lt "${MINIMUM_LINT_SCORE}" ]; then
-			BASENAME=`basename ${FILE}`
+			BASENAME=`basename ${FILE} | sed 's/.\///g'`
 			CODE_FILE=`echo ${BASENAME} | sed 's/_/\//g' | awk -F.pylint '{print $1}'`
 			ERROR_MSG="${CODE_FILE} failed lint test with a score of ${SCORE_INT} < ${MINIMUM_LINT_SCORE} 
 			
@@ -77,6 +79,8 @@ if [ "${#LINT_FAILS[@]}" -gt "0" ]; then
 fi
 
 ########################################################################################################################
+# UNITTEST TESTING 
+########################################################################################################################
 
 #execute all available unittests in the tests directory
 #this outputs junit style tests that can be read by Jenkins
@@ -87,6 +91,8 @@ PYTHONPATH="." python -m coverage run tests/unittest_runner.py
 python -m coverage xml -o coverage.xml
 python -m coverage html -d coverage
 
+########################################################################################################################
+# DOCTEST TESTING - not implemented yet
 ########################################################################################################################
 
 #TODO - Add a mechanism for recursively executing doctests in the tests directory
