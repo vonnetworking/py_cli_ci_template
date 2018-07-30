@@ -5,7 +5,8 @@
 #GLOBALS
 #TODO - these should probably be able to be specified as parameters on the jenkins job
 
-MINIMUM_LINT_SCORE=7
+MINIMUM_LINT_SCORE=7 #lowest lint score that will result in a successful build
+
 LOG_DIR="tests/logs"
 
 ########################################################################################################################
@@ -30,9 +31,9 @@ CODE_FILES=`find . -not \( -path ./virtualenv -prune \) -not \( -path ./tests -p
 for FILE in ${CODE_FILES}; do
 	
 	PYTHONPATH="." python -m coverage run ${FILE}
-
-	pycodestyle --max-line-length=120 ${FILE} > ${LOG_DIR}/${FILE}.pep8.log || true
-        pylint ${FILE} > ${LOG_DIR}/${FILE}.pylint.log || true
+	CODE_FILE=`echo ${FILE} | sed 's/\//_/g'` #file naming for logs...replaces the slashes 
+	pycodestyle --max-line-length=120 ${FILE} > ${LOG_DIR}/${CODE_FILE}.pep8.log || true
+        pylint ${FILE} > ${LOG_DIR}/${CODE_FILE}.pylint.log || true
 done
 
 ########################################################################################################################
@@ -51,7 +52,15 @@ for FILE in ${LINT_REPORTS}; do
 		SCORE_INT=$((${SCORE} + 0))
 	
 		if [ "${SCORE_INT}" -lt "${MINIMUM_LINT_SCORE}" ]; then
-			ERROR_MSG=`echo "${FILE} failed lint test with a score of ${SCORE_INT} < ${MINIMUM_LINT_SCORE}"`
+			BASENAME=`basename ${FILE}`
+			CODE_FILE=`echo ${BASENAME} | sed 's/_/\//g' | awk -F.pylint '{print $1}'`
+			ERROR_MSG="${CODE_FILE} failed lint test with a score of ${SCORE_INT} < ${MINIMUM_LINT_SCORE} 
+			
+			--------REPORT-------- 
+			
+			$(cat ${FILE})
+			
+			------END REPORT------"
 			LINT_FAILS+=("${ERROR_MSG}")
 		fi
 	fi		
